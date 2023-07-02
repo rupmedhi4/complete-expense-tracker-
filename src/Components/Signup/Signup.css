@@ -1,0 +1,66 @@
+h1{
+    text-align: center;
+}
+.card {
+    background-color: #a49898;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 27px;
+    width: 267px;
+    margin: 0 auto;
+    margin-top: 2rem;
+  }
+
+  .card label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .card input {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .card input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    width: 100%
+  }
+
+  .card input[type="submit"]:hover {
+    background-color: #45a049;
+  }
+
+  .btn{
+
+    color: rgb(15, 13, 13);
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    background-color: #eaf2eb;
+  width: 100%;
+  }
+  .btn:hover {
+    background-color: #272f27;
+    color: aquamarine;
+  }
+  .btn-signup{
+
+    color: rgb(241, 239, 239);
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    background-color: #04570e;
+  width: 100%;
+  }
+  .btn-signup:hover {
+    background-color: #200eba;
+    color: rgb(237, 235, 243);
+  }

@@ -1,0 +1,93 @@
+.form-container {
+    width: 70%;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    margin-left: 27%;
+}
+  
+
+.header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+}
+
+span {
+font-weight: bold; 
+}
+
+.frmspan {
+font-size: 1.5rem;
+margin-bottom: 1rem;
+}
+
+.cancel-button {
+padding: 5px 10px;
+background-color: #ccc;
+color: #fff;
+border: none;
+border-radius: 3px;
+cursor: pointer;
+margin-right: 5rem;
+}
+
+.cancel-button:hover {
+background-color: #999;
+}
+
+form {
+display: flex;
+flex-direction: column;
+}
+
+.input-container {
+display: flex;
+flex-wrap: wrap;
+margin-bottom: 15px;
+}
+
+label {
+margin-right: 10px;
+font-weight: bold;
+margin-top: 6px;
+}
+
+input {
+flex: 1;
+padding: 10px;
+margin-bottom: 10px;
+border: 1px solid #ccc;
+border-radius: 3px;
+
+margin-right: 7rem;
+}
+
+.button-container {
+text-align: left;
+}
+
+button[type="submit"] {
+padding: 10px 20px;
+background-color: #4caf50;
+color: white;
+border: none;
+border-radius: 3px;
+cursor: pointer;
+}
+
+button[type="submit"]:hover {
+background-color: #45a049;
+}
+
+button[type="submit"]:focus {
+outline: none;
+}
+
+.horizontal-line {
+margin-top: 20px;
+border: none;
+border-top: 1px solid #ccc;
+margin-left: -2%;
+}

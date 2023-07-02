@@ -1,0 +1,24 @@
+.container1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .heading1 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .btnn {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btnn:hover {
+    background-color: #2980b9;
+  }
