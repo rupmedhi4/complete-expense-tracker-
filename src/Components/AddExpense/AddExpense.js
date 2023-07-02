@@ -1,33 +1,57 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addExpenses } from '../Redux/Slices/AddExpenseSlices';
 import './AddExpense.css';
 import DisplayExpense from '../DisplayExpense/DisplayExpense';
 import { auth, db } from '../../Firebase';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { toast } from 'react-toastify';
 
 export default function AddExpense() {
   const [expenseDescription, setExpenseDescription] = useState('');
   const [category, setCategory] = useState('');
   const [moneySpent, setMoneySpent] = useState('');
+  const [userData, setUserData] = useState([]);
 
   const user = auth.currentUser;
 
   const dispatch = useDispatch();
-  const ExpenseData = useSelector(state => state.AddExpenseSlices.Expenses);
+//  const ExpenseData = useSelector(state => state.AddExpenseSlices.Expenses);
+
+  useEffect(()=>{
+    if (user) {
+      const docRef = doc(db, "userdata", user.uid);
+      const unsubscribe = onSnapshot(docRef, (docSnap) => {
+        if (docSnap.exists()) {
+          setUserData(docSnap.data().userexpenses);
+         
+        } else {
+          console.log("no doc");
+        }
+      });
+      return () => unsubscribe(); // Cleanup the listener when the component unmounts
+
+    } else {
+      console.log("error");
+    }
+  }, [user])
+
+ console.log(userData);
 
   const handleSubmit = async e => {
+   
     e.preventDefault();
-
     const data = {
       moneySpent,
       expenseDescription,
       category
     };
-
+    
     try {
-      await setDoc(doc(db, 'userdata', user.uid), data);
-      alert("done")
+      await setDoc(doc(db, "userdata", user.uid), {
+        userexpenses: [...userData, data]
+      });
+      toast.success('Expense added successfully');
     } catch (err) {
       alert(err);
       console.log(err)
@@ -80,7 +104,7 @@ export default function AddExpense() {
         </form>
       </div>
       
-      {ExpenseData.length > 0 && <DisplayExpense />}
+      {userData.length > 0 && <DisplayExpense userData ={userData}/>}
     </>
   );
 }
