@@ -1,12 +1,9 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import './DisplayExpense.css';
 import { BiEdit } from 'react-icons/bi';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
 
 export default function DisplayExpense({ userData }) {
-  const ExpenseData = useSelector((state) => state.AddExpenseSlices.Expenses);
-
   return (
     <div className="details-container">
       <h1 className="expenseTitle">Expense Details</h1>

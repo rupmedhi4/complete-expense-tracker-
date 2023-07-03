@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addExpenses } from '../Redux/Slices/AddExpenseSlices';
+import {  addExpenses } from '../Redux/Slices/AddExpenseSlices';
 import './AddExpense.css';
 import DisplayExpense from '../DisplayExpense/DisplayExpense';
 import { auth, db } from '../../Firebase';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
+import { setUserData } from '../Redux/Slices/AddExpenseSlices';
+import { addExpense } from '../Redux/Slices/AddExpenseSlices';
 
 export default function AddExpense() {
   const [expenseDescription, setExpenseDescription] = useState('');
   const [category, setCategory] = useState('');
   const [moneySpent, setMoneySpent] = useState('');
-  const [userData, setUserData] = useState([]);
 
   const user = auth.currentUser;
 
@@ -23,7 +24,9 @@ export default function AddExpense() {
       const docRef = doc(db, "userdata", user.uid);
       const unsubscribe = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists()) {
-          setUserData(docSnap.data().userexpenses);
+          //setUserData(docSnap.data().userexpenses);
+          const prevData = docSnap.data().userexpenses;
+          dispatch(setUserData(prevData))
          
         } else {
           console.log("no doc");
@@ -36,7 +39,6 @@ export default function AddExpense() {
     }
   }, [user])
 
- console.log(userData);
 
   const handleSubmit = async e => {
    
@@ -46,22 +48,11 @@ export default function AddExpense() {
       expenseDescription,
       category
     };
-    
-    try {
-      await setDoc(doc(db, "userdata", user.uid), {
-        userexpenses: [...userData, data]
-      });
-      toast.success('Expense added successfully');
-    } catch (err) {
-      alert(err);
-      console.log(err)
-    }
 
-    // Uncomment the following lines if you want to dispatch the action and clear the form fields
-    // dispatch(addExpenses({ moneySpent, expenseDescription, category }));
-    // setExpenseDescription('');
-    // setCategory('');
-    // setMoneySpent('');
+    dispatch(addExpense(data));
+    setExpenseDescription('');
+    setCategory('');
+    setMoneySpent('');
   };
 
   return (
@@ -104,7 +95,7 @@ export default function AddExpense() {
         </form>
       </div>
       
-      {userData.length > 0 && <DisplayExpense userData ={userData}/>}
+      {/* {userData.length > 0 && <DisplayExpense userData ={userData}/>} */}
     </>
   );
 }
