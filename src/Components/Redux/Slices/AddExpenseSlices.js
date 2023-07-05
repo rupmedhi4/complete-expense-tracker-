@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { auth, db } from "../../../Firebase";
 import { setDoc, doc } from "firebase/firestore";
 import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 
 export const addExpense = createAsyncThunk(
   "ProductSlice/addExpense",
@@ -12,9 +13,9 @@ export const addExpense = createAsyncThunk(
       const prevUserData = state.AddExpenseSlices.userData; // Replace 'ProductSlice' with the actual name of your slice
 
       if (user) {
-      
+
         await setDoc(doc(db, "userdata", user.uid), {
-          userexpenses:  [ ...prevUserData,userExpense],
+          userexpenses: [...prevUserData, userExpense],
         });
         return userExpense;
       } else {
@@ -38,13 +39,13 @@ export const deleteExpense = createAsyncThunk(
       if (user) {
 
         const updateDoc = prevUserData.filter((databaseExpense) => {
-              return databaseExpense.id != id;
-            });
+          return databaseExpense.id != id;
+        });
 
         console.log(updateDoc);
 
         await setDoc(doc(db, "userdata", user.uid), {
-          userexpenses:  [ ...updateDoc],
+          userexpenses: [...updateDoc],
         });
 
         return updateDoc;
@@ -56,46 +57,11 @@ export const deleteExpense = createAsyncThunk(
     }
   }
 );
-export const editExpense = createAsyncThunk(
-  "ProductSlice/editExpense",
-  async (id, { rejectWithValue, getState }) => {
-    try {
-      const user = auth.currentUser;
-     
-      const state = getState();
-      const prevUserData = state.AddExpenseSlices.userData; // Replace 'ProductSlice' with the actual name of your slice
 
-      if (user) {
 
-        const updateDoc = prevUserData.filter((databaseExpense) => {
-              return databaseExpense.id != id;
-            });
 
-        const editData = prevUserData.filter((databaseExpense) => {
-              return databaseExpense.id === id;
-            });
 
-        console.log(editData[0].category);
 
-        await setDoc(doc(db, "userdata", user.uid), {
-          userexpenses:  [ ...updateDoc],
-        });
-
-        state.AddExpenseSlices.category = editData[0].category
-        state.AddExpenseSlices.expenseDescription = editData[0].expenseDescription
-        state.AddExpenseSlices.moneySpent = editData[0].moneySpent
-               
-        console.log(state.category)
-        
-        return updateDoc;
-      } else {
-        throw new Error("somethoing wrong");
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
 
 
 const AddExpenseSlices = createSlice({
@@ -104,9 +70,11 @@ const AddExpenseSlices = createSlice({
     userData: [],
     loading: false,
     error: null,
-    expenseDescription:'',
-    category:'',
-    moneySpent :''
+    expenseDescription: '',
+    category: '',
+    moneySpent: '',
+    isEdit : true,
+    TotalMoneyExpense : 0
   },
   reducers: {
     setUserData: (state, action) => {
@@ -114,23 +82,30 @@ const AddExpenseSlices = createSlice({
       console.log(state.userData)
 
     },
-    setExpenseDescription : (state, action) =>{
+    setExpenseDescription: (state, action) => {
       state.expenseDescription = action.payload;
     },
-    setCategory : (state, action) =>{
+    setCategory: (state, action) => {
       state.category = action.payload;
     },
-    setMoneySpent : (state, action) =>{
-        state.moneySpent = action.payload;
+    setMoneySpent: (state, action) => {
+      state.moneySpent = action.payload;
     },
-    clearInputValue : (state, action) =>{
+    clearInputValue: (state, action) => {
       state.expenseDescription = '';
       state.category = '';
       state.moneySpent = '';
-
     },
-    
+    checkEdit: (state,action)=>{
+      state.isEdit = true;
+    },
+    checkDelete: (state,action)=>{
+      state.isEdit = false;
+    },
+    trackExpenseMoney: (state, action) => {
+      state.TotalMoneyExpense = state.userData.reduce((total, data) => total + data.moneySpent,0);}
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(addExpense.pending, (state) => {
@@ -145,16 +120,12 @@ const AddExpenseSlices = createSlice({
         state.loading = false;
         state.error = action.payload;
         console.log("Failed to add expense", action.payload);
-      });
-  },
-
-  extraReducers: (builder) => {
-    builder
+      })
       .addCase(deleteExpense.pending, (state) => {
         console.log("pending")
       })
       .addCase(deleteExpense.fulfilled, (state, action) => {
-        alert("Successfully delete expense")
+        state.isEdit ?  alert("edit your  expense") : alert("Successfully delete expense") 
         console.log("Successfully delete expense");
       })
       .addCase(deleteExpense.rejected, (state, action) => {
@@ -164,5 +135,5 @@ const AddExpenseSlices = createSlice({
   },
 });
 
-export const { setUserData,setExpenseDescription, setCategory, setMoneySpent,clearInputValue} = AddExpenseSlices.actions;
+export const { setUserData, setExpenseDescription, setCategory, setMoneySpent, clearInputValue,checkEdit,checkDelete, trackExpenseMoney } = AddExpenseSlices.actions;
 export default AddExpenseSlices.reducer;
