@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {  addExpenses } from '../Redux/Slices/AddExpenseSlices';
+import {  addExpenses, clearInputValue, setCategory, setExpenseDescription, setMoneySpent } from '../Redux/Slices/AddExpenseSlices';
 import './AddExpense.css';
 import DisplayExpense from '../DisplayExpense/DisplayExpense';
 import { auth, db } from '../../Firebase';
@@ -10,14 +10,18 @@ import { setUserData } from '../Redux/Slices/AddExpenseSlices';
 import { addExpense } from '../Redux/Slices/AddExpenseSlices';
 
 export default function AddExpense() {
-  const [expenseDescription, setExpenseDescription] = useState('');
-  const [category, setCategory] = useState('');
-  const [moneySpent, setMoneySpent] = useState('');
+  // const [expenseDescription, setExpenseDescription] = useState('');
+  // const [category, setCategory] = useState('');
+  // const [moneySpent, setMoneySpent] = useState('');
 
   const user = auth.currentUser;
 
   const dispatch = useDispatch();
-//  const ExpenseData = useSelector(state => state.AddExpenseSlices.Expenses);
+
+  const userData = useSelector(state => state.AddExpenseSlices.userData);
+  const expenseDescription = useSelector(state => state.AddExpenseSlices.expenseDescription);
+  const category = useSelector(state => state.AddExpenseSlices.category);
+  const moneySpent = useSelector(state => state.AddExpenseSlices.moneySpent);
 
   useEffect(()=>{
     if (user) {
@@ -43,16 +47,17 @@ export default function AddExpense() {
   const handleSubmit = async e => {
    
     e.preventDefault();
+    const id = Math.random();
     const data = {
       moneySpent,
       expenseDescription,
-      category
+      category,
+      id
+      
     };
 
     dispatch(addExpense(data));
-    setExpenseDescription('');
-    setCategory('');
-    setMoneySpent('');
+    dispatch(clearInputValue())
   };
 
   return (
@@ -66,7 +71,7 @@ export default function AddExpense() {
               type="text"
               id="money-spent"
               value={moneySpent}
-              onChange={e => setMoneySpent(e.target.value)}
+              onChange={e => dispatch(setMoneySpent(e.target.value))}
             />
           </div>
           <div className="form-group">
@@ -75,15 +80,14 @@ export default function AddExpense() {
               type="text"
               id="expense-description"
               value={expenseDescription}
-              onChange={e => setExpenseDescription(e.target.value)}
-            />
+              onChange={e => dispatch(setExpenseDescription(e.target.value))}            />
           </div>
           <div className="form-group">
             <label htmlFor="category">Category</label>
             <select
               id="category"
               value={category}
-              onChange={e => setCategory(e.target.value)}
+              onChange={e => dispatch(setCategory(e.target.value))}
             >
               <option value="">Select a category</option>
               <option value="Food">Food</option>
@@ -95,7 +99,7 @@ export default function AddExpense() {
         </form>
       </div>
       
-      {/* {userData.length > 0 && <DisplayExpense userData ={userData}/>} */}
+      {userData.length > 0 && <DisplayExpense />}
     </>
   );
 }
