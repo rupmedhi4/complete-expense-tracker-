@@ -49,10 +49,9 @@ export default function DisplayExpense() {
   }
 
   useEffect(() => {
-    if (user) {
-      dispatch(trackExpenseMoney());
-    }
-  }, [user, dispatch]);
+    dispatch(trackExpenseMoney());
+  }, [userData, dispatch]);
+  
   
 
   return (

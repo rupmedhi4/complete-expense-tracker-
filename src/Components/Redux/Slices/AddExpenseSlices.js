@@ -103,7 +103,8 @@ const AddExpenseSlices = createSlice({
       state.isEdit = false;
     },
     trackExpenseMoney: (state, action) => {
-      state.TotalMoneyExpense = state.userData.reduce((total, data) => total + data.moneySpent,0);}
+      state.TotalMoneyExpense = state.userData.reduce((total, data) => total + Number(data.moneySpent),0);}
+      
   },
 
   extraReducers: (builder) => {
