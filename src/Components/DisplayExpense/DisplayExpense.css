@@ -26,6 +26,7 @@
 .expenseTitle {
   font-size: 24px;
   margin-bottom: 10px;
+  
 }
 
 .header-item {
@@ -57,4 +58,26 @@
   margin-bottom: 1rem;
   margin-top: 1rem;
   
+}
+
+.light {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.dark {
+  background-color: #45474a;
+  color: #f3efef;
+}
+
+button {
+  background-color: #6b1111;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+p {
+  margin-top: 20px;
 }

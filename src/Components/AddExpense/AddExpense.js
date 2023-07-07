@@ -8,6 +8,7 @@ import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { setUserData } from '../Redux/Slices/AddExpenseSlices';
 import { addExpense } from '../Redux/Slices/AddExpenseSlices';
+import { toggleTheme } from '../Redux/Slices/toggleThemeSlices';
 
 export default function AddExpense() {
   // const [expenseDescription, setExpenseDescription] = useState('');
@@ -22,6 +23,9 @@ export default function AddExpense() {
   const expenseDescription = useSelector(state => state.AddExpenseSlices.expenseDescription);
   const category = useSelector(state => state.AddExpenseSlices.category);
   const moneySpent = useSelector(state => state.AddExpenseSlices.moneySpent);
+  const Theme = useSelector((state) => state.toggleThemeSlices.theme);
+  const TotalMoneyExpense = useSelector((state) => state.AddExpenseSlices.TotalMoneyExpense);
+
 
   useEffect(()=>{
     if (user) {
@@ -60,13 +64,24 @@ export default function AddExpense() {
     dispatch(clearInputValue())
   };
 
+  const toggleThemeHandler = () => {
+    dispatch(toggleTheme()); // Dispatch toggleTheme action
+    console.log(Theme)
+  };
+
   return (
     <>
-      <div className="form-container">
-        <h2>Expense Form</h2>
+    <div  className={`${Theme}`}>
+    {TotalMoneyExpense > 1000 ? 
+        <button onClick={toggleThemeHandler} className="toggle-button" style={{marginLeft:"70rem", marginTop:"30px"}}>
+        Toggle Theme
+      </button> : null}
+    
+       <div className={`form-container ${Theme}`}>
+        <h2 style={{color:"black"}}>Expense Form</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="money-spent">Money Spent</label>
+            <label htmlFor="money-spent" style={{color:"black"}}>Money Spent</label>
             <input
               type="text"
               id="money-spent"
@@ -75,7 +90,7 @@ export default function AddExpense() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="expense-description">Expense Description</label>
+            <label htmlFor="expense-description" style={{color:"black"}}>Expense Description</label>
             <input
               type="text"
               id="expense-description"
@@ -83,7 +98,7 @@ export default function AddExpense() {
               onChange={e => dispatch(setExpenseDescription(e.target.value))}            />
           </div>
           <div className="form-group">
-            <label htmlFor="category">Category</label>
+            <label htmlFor="category" style={{color:"black"}}>Category</label>
             <select
               id="category"
               value={category}
@@ -100,6 +115,8 @@ export default function AddExpense() {
       </div>
       
       {userData.length > 0 && <DisplayExpense />}
+    </div>
+     
     </>
   );
 }
