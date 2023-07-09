@@ -7,6 +7,7 @@ import { auth, db } from "../../Firebase";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import { checkDelete, checkEdit, deleteExpense, editExpense, setCategory, setExpenseDescription, setMoneySpent, trackExpenseMoney } from "../Redux/Slices/AddExpenseSlices";
 import { toggleTheme } from "../Redux/Slices/toggleThemeSlices";
+import { Document, Page, Text, PDFDownloadLink } from "@react-pdf/renderer";
 
 export default function DisplayExpense() {
   const userData = useSelector((state) => state.AddExpenseSlices.userData);
@@ -15,58 +16,54 @@ export default function DisplayExpense() {
   const user = auth.currentUser;
   const Theme = useSelector((state) => state.toggleThemeSlices.theme);
 
-
   const deleteHandler = (id) => {
-    console.log(id);
-    // const user = auth.currentUser;
-    // const docRef = doc(db, "userdata", user.uid);
-    // onSnapshot(docRef, (docSnap) => {
-    //   const prevData = docSnap.data().userexpenses;
-    //   const updateDoc = prevData.filter((databaseExpense) => {
-    //     return databaseExpense.id != id;
-    //   });
-    //   console.log(updateDoc);
-
-    //   setDoc(doc(db, "userdata", user.uid), {
-    //     userexpenses: [...updateDoc],
-    //   });
-    // });
-    dispatch(checkDelete())
-    dispatch(deleteExpense(id))
+    dispatch(checkDelete());
+    dispatch(deleteExpense(id));
   };
 
   const editHandler = (id) => {
-    // dispatch(editExpense(id))
-    const editData = userData.filter((data) => {
-      if (data.id === id) {
-        return data;
-      }
-    })
-    console.log(editData[0].category)
-    dispatch(setExpenseDescription(editData[0].expenseDescription))
-    dispatch(setCategory(editData[0].category))
-    dispatch(setMoneySpent(editData[0].moneySpent))
-
-    dispatch(checkEdit())
-    dispatch(deleteExpense(id))
-  }
+    const editData = userData.find((data) => data.id === id);
+    dispatch(setExpenseDescription(editData.expenseDescription));
+    dispatch(setCategory(editData.category));
+    dispatch(setMoneySpent(editData.moneySpent));
+    dispatch(checkEdit());
+    dispatch(deleteExpense(id));
+  };
 
   useEffect(() => {
     dispatch(trackExpenseMoney());
   }, [userData, dispatch]);
 
   const toggleThemeHandler = () => {
-    dispatch(toggleTheme()); // Dispatch toggleTheme action
-    console.log(Theme)
+    dispatch(toggleTheme());
+    console.log(Theme);
   };
 
+  const MyDocument = () => (
+    <Document>
+      <Page>
+        <Text>User Data:</Text>
+        {userData.map((expense, index) => (
+          <Text key={index}>
+            Money Spent: {expense.moneySpent}, Expense Description: {expense.expenseDescription}, Category: {expense.category}
+          </Text>
+        ))}
+      </Page>
+    </Document>
+  );
 
   return (
     <div className={`${Theme}`}>
       <h1 className="expenseTitle">Expense Details</h1>
       <span>Total Money: {TotalMoneyExpense}</span>
       {TotalMoneyExpense > 1000 ? <button style={{ display: "inline", marginLeft: "73rem" }}>Buy Premium</button> : null}
-
+      <div>
+        <PDFDownloadLink document={<MyDocument />} fileName="userdata.csv">
+          {({ blob, url, loading, error }) =>
+            loading ? "Generating PDF..." : "Download PDF"
+          }
+        </PDFDownloadLink>
+      </div>
       <div className="header-container">
         <span className="header-item">Money Spent</span>
         <span className="header-item">Expense Description</span>
@@ -74,12 +71,16 @@ export default function DisplayExpense() {
       </div>
 
       {userData.map((expense, index) => (
-        <div key={index} className="details-item" >
-          <div className="item1" style={{color:"black"}}>{expense.moneySpent}</div>
-          <div className="item2" style={{color:"black"}}>{expense.expenseDescription}</div>
-          <div className="item3" style={{color:"black"}}>
+        <div key={index} className="details-item">
+          <div className="item1" style={{ color: "black" }}>
+            {expense.moneySpent}
+          </div>
+          <div className="item2" style={{ color: "black" }}>
+            {expense.expenseDescription}
+          </div>
+          <div className="item3" style={{ color: "black" }}>
             {expense.category}
-            <BiEdit className="icon-margin" onClick={() => (editHandler(expense.id))} />
+            <BiEdit className="icon-margin" onClick={() => editHandler(expense.id)} />
             <MdOutlineDeleteOutline onClick={() => deleteHandler(expense.id)} />
           </div>
         </div>

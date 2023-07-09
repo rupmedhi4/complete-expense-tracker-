@@ -27,7 +27,9 @@ function App() {
         setUser(null)
       }
     });
-    unsubscribe();
+    return () => {
+      unsubscribe(); // Unsubscribe from the onAuthStateChanged listener
+    };
   },[])
 
   return (

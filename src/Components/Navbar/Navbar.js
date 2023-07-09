@@ -14,6 +14,7 @@ export default function Navbar() {
     try{
        await signOut(auth)
        navigate("/")
+       console.log(user)
        toast.success("Signout successfully")
     }catch(err){
       toast.error(err.message)
