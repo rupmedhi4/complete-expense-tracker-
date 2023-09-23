@@ -3,6 +3,8 @@ import { auth, db } from "../../../Firebase";
 import { setDoc, doc } from "firebase/firestore";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const addExpense = createAsyncThunk(
   "ProductSlice/addExpense",
@@ -58,12 +60,6 @@ export const deleteExpense = createAsyncThunk(
   }
 );
 
-
-
-
-
-
-
 const AddExpenseSlices = createSlice({
   name: "ProductSlice",
   initialState: {
@@ -78,9 +74,14 @@ const AddExpenseSlices = createSlice({
   },
   reducers: {
     setUserData: (state, action) => {
-      state.userData = action.payload;
+      if(action.payload.length === 0){
+        state.userData = [];
+      }else{
+         state.userData = action.payload;
       console.log(state.userData)
 
+      }
+     
     },
     setExpenseDescription: (state, action) => {
       state.expenseDescription = action.payload;
@@ -115,23 +116,23 @@ const AddExpenseSlices = createSlice({
       })
       .addCase(addExpense.fulfilled, (state, action) => {
         state.loading = false;
-        console.log("Successfully added expense");
+       toast.success("Successfully added expense");
       })
       .addCase(addExpense.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        console.log("Failed to add expense", action.payload);
+       toast.fail("Failed to add expense", action.payload);
       })
       .addCase(deleteExpense.pending, (state) => {
         console.log("pending")
       })
       .addCase(deleteExpense.fulfilled, (state, action) => {
-        state.isEdit ?  alert("edit your  expense") : alert("Successfully delete expense") 
-        console.log("Successfully delete expense");
+        state.isEdit ?  toast.success("edit your  expense") : toast.success("Successfully delete expense") 
+      
       })
       .addCase(deleteExpense.rejected, (state, action) => {
-        alert("Failed to delete expense", action.payload);
-        console.log("Failed to delete expense", action.payload);
+       toast.fail("Failed to delete expense", action.payload);
+        
       });
   },
 });

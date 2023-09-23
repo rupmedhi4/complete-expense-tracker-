@@ -2,6 +2,7 @@ import React from 'react';
 import { auth } from '../../Firebase';
 import { sendEmailVerification } from 'firebase/auth';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './EmailVerification.css';
 
 export default function EmailVerification() {

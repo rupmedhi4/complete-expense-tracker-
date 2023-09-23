@@ -56,14 +56,17 @@ export default function DisplayExpense() {
     <div className={`${Theme}`}>
       <h1 className="expenseTitle">Expense Details</h1>
       <span>Total Money: {TotalMoneyExpense}</span>
-      {TotalMoneyExpense > 1000 ? <button style={{ display: "inline", marginLeft: "73rem" }}>Buy Premium</button> : null}
-      <div>
-        <PDFDownloadLink document={<MyDocument />} fileName="userdata.csv">
-          {({ blob, url, loading, error }) =>
-            loading ? "Generating PDF..." : "Download PDF"
-          }
-        </PDFDownloadLink>
-      </div>
+      {TotalMoneyExpense > 1000 ?
+      <>
+              <button style={{ display: "inline", marginLeft: "73rem" }}>Buy Premium</button>
+              <div>
+                <PDFDownloadLink document={<MyDocument />} fileName="userdata.pdf">
+                  {({ blob, url, loading, error }) =>
+                    loading ? "Generating PDF..." : "Download PDF"
+                  }
+                </PDFDownloadLink>
+              </div>
+      </>: null}
       <div className="header-container">
         <span className="header-item">Money Spent</span>
         <span className="header-item">Expense Description</span>

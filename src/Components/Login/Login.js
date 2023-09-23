@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../../Firebase';
-import { toast } from 'react-toastify';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login() {
@@ -20,7 +20,7 @@ export default function Login() {
       toast.success('Login Successful');
     } catch (err) {
       toast.error(err.message);
-      alert(err)
+     
     }
   };
 

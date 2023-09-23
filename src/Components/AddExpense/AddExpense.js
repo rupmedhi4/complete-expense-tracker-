@@ -6,12 +6,14 @@ import DisplayExpense from '../DisplayExpense/DisplayExpense';
 import { auth, db } from '../../Firebase';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { setUserData } from '../Redux/Slices/AddExpenseSlices';
 import { addExpense } from '../Redux/Slices/AddExpenseSlices';
 import { toggleTheme } from '../Redux/Slices/toggleThemeSlices';
 
 export default function AddExpense() {
-  // const [expenseDescription, setExpenseDescription] = useState('');
+   const [Loading, setLoading] = useState(true)
   // const [category, setCategory] = useState('');
   // const [moneySpent, setMoneySpent] = useState('');
 
@@ -31,13 +33,20 @@ export default function AddExpense() {
     if (user) {
       const docRef = doc(db, "userdata", user.uid);
       const unsubscribe = onSnapshot(docRef, (docSnap) => {
-        if (docSnap.exists()) {
+        if(docSnap.exists()) {
           //setUserData(docSnap.data().userexpenses);
-          const prevData = docSnap.data().userexpenses;
+          setLoading(true)
+          const prevData =  docSnap.data().userexpenses;
           dispatch(setUserData(prevData))
+          setLoading(false)
+          console.log(user)
+          console.log(prevData)
          
         } else {
           console.log("no doc");
+          setLoading(true)
+          dispatch(setUserData([]))
+          setLoading(false)
         }
       });
       return () => unsubscribe(); // Cleanup the listener when the component unmounts
@@ -45,7 +54,7 @@ export default function AddExpense() {
     } else {
       console.log("error");
     }
-  }, [user])
+  }, [])
 
 
   const handleSubmit = async e => {
@@ -114,7 +123,8 @@ export default function AddExpense() {
         </form>
       </div>
       
-      {userData.length > 0 && <DisplayExpense />}
+      { Loading ? <p style={{display:"auto"}}>`Loading</p> : userData.length > 0 ? <DisplayExpense /> : <h2>No Expense please add your Expense</h2>}
+     
     </div>
      
     </>
