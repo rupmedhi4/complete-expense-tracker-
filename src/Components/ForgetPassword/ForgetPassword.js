@@ -34,7 +34,7 @@ export default function ForgetPassword() {
         />
         <button type="submit">Reset Password</button>
       </form>
-      <ToastContainer /> {/* Add this line to render the ToastContainer */}
+      <ToastContainer /> 
     </div>
   );
 }

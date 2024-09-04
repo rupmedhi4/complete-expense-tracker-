@@ -49,7 +49,7 @@ export default function AddExpense() {
           setLoading(false)
         }
       });
-      return () => unsubscribe(); // Cleanup the listener when the component unmounts
+      return () => unsubscribe(); 
 
     } else {
       console.log("error");
@@ -74,7 +74,7 @@ export default function AddExpense() {
   };
 
   const toggleThemeHandler = () => {
-    dispatch(toggleTheme()); // Dispatch toggleTheme action
+    dispatch(toggleTheme()); 
     console.log(Theme)
   };
 

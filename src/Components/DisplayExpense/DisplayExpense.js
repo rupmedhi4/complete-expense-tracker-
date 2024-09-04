@@ -13,6 +13,7 @@ export default function DisplayExpense() {
   const userData = useSelector((state) => state.AddExpenseSlices.userData);
   const TotalMoneyExpense = useSelector((state) => state.AddExpenseSlices.TotalMoneyExpense);
   const dispatch = useDispatch();
+  
   const user = auth.currentUser;
   const Theme = useSelector((state) => state.toggleThemeSlices.theme);
 

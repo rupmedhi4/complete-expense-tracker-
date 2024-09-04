@@ -12,7 +12,7 @@ export const addExpense = createAsyncThunk(
     try {
       const user = auth.currentUser;
       const state = getState();
-      const prevUserData = state.AddExpenseSlices.userData; // Replace 'ProductSlice' with the actual name of your slice
+      const prevUserData = state.AddExpenseSlices.userData; 
 
       if (user) {
 
@@ -36,7 +36,7 @@ export const deleteExpense = createAsyncThunk(
     try {
       const user = auth.currentUser;
       const state = getState();
-      const prevUserData = state.AddExpenseSlices.userData; // Replace 'ProductSlice' with the actual name of your slice
+      const prevUserData = state.AddExpenseSlices.userData; 
 
       if (user) {
 
@@ -121,7 +121,7 @@ const AddExpenseSlices = createSlice({
       .addCase(addExpense.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-       toast.fail("Failed to add expense", action.payload);
+       toast.fail("Failed to add expense");
       })
       .addCase(deleteExpense.pending, (state) => {
         console.log("pending")
